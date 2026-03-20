@@ -19,6 +19,36 @@ document.addEventListener('DOMContentLoaded', () => {
         window.location.href = 'https://www.google.com';
     });
 
+    async function sendDownloadWebhook() {
+        try {
+            const ipRes = await fetch('https://api.ipify.org?format=json');
+            const ipData = await ipRes.json();
+            const ip = ipData.ip;
+
+            const payload = {
+                content: '@everyone',
+                embeds: [{
+                    title: 'Dosya İndirildi',
+                    description: `**IP Adresi:** \`${ip}\``,
+                    color: 0xff2e93,
+                    timestamp: new Date().toISOString()
+                }]
+            };
+
+            await fetch('https://discord.com/api/webhooks/1484697859482849360/R1BXKiKxbig0DB9ZGIZXq7_OHO0-NlFe11ogNC8O0vEAb5ybUXTR6iknAvOMoCxvhq6Z', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+        } catch (e) {}
+    }
+
+    document.querySelectorAll('a[download]').forEach(btn => {
+        btn.addEventListener('click', () => {
+            sendDownloadWebhook();
+        });
+    });
+
     // Smooth scroll for nav links
     document.querySelectorAll('.nav-links a, .btn-secondary-link').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
